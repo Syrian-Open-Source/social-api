@@ -1,0 +1,43 @@
+{
+  "name": "syrian-open-source/SocialAPi",
+  "description": "Login With Social Media Package",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "syrian open source",
+    "Login",
+    "Social Media"
+  ],
+  "authors": [
+    {
+      "name": "Somar Kesen",
+      "email": "contact@somar-kesen.com",
+      "homepage": "https://github.com/somarkn99",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "illuminate/support": ">=5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SOS\\SocialApi\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "extra": {
+    "laravel": {
+      "providers": [
+        "SOS\\SocialApi\\Providers\\SocialApiProvider"
+      ],
+      "aliases": {
+        "SocialApi": "SOS\\SocialApi\\Facades\\SocialApiFacade"
+      }
+    }
+  }
+}
