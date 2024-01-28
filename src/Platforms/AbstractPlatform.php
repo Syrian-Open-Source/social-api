@@ -2,18 +2,41 @@
 
 namespace SOS\SocialApi\Platforms;
 
+use Illuminate\Support\Facades\Http;
+
+/**
+ * @author by: Somar Kesen.
+ * github: https://github.com/somarkn99
+ * linkedin: https://www.linkedin.com/in/somarkesen/
+ */
 abstract class AbstractPlatform
 {
-    protected $scopes;
-    protected $baseurl;
+  protected $scopes = [];
+  protected $baseUrl;
+  protected $token;
 
+  public function __construct($token = null)
+  {
+    $this->token = $token;
+  }
 
-    abstract protected function getUserInfo($token);
-    abstract protected function mapUserData($user);
-    public function scopes($scopes)
-    {
-        $this->scopes = array_unique(array_merge($this->scopes, (array) $scopes));
+  public function setToken($token)
+  {
+    $this->token = $token;
+  }
 
-        return $this;
+  public function addScope($scope)
+  {
+    if (!in_array($scope, $this->scopes)) {
+      $this->scopes[] = $scope;
     }
+  }
+
+  protected function sendRequest($endpoint, $method = 'GET', $headers = [], $body = [])
+  {
+    return Http::withToken($this->token)->get($this->baseUrl);
+  }
+
+  abstract protected function getUserInfo();
+  abstract protected function mapUserDataByScopes($scopes = null);
 }

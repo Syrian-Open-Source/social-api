@@ -2,36 +2,37 @@
 
 namespace SOS\SocialApi\Platforms;
 
-use Illuminate\Support\Facades\Http;
-
+/**
+ * arthur by: Ali.
+ * github: 
+ * linkedin: 
+ */
 class LinkedIn extends AbstractPlatform
 {
     protected $scopes = ['openid', 'profile', 'email'];
+    protected $baseUrl = 'https://api.linkedin.com/v2/userinfo';
 
-    protected $baseurl = 'https://api.linkedin.com/v2/userinfo';
-
-    public function getUserInfo($token)
+    public function getUserInfo()
     {
-        $data = Http::withToken($token)->get($this->baseurl);
         try {
-            return $data->json();
+            $response = $this->sendRequest($this->baseUrl);
+            if ($response->successful()) {
+                return $this->mapUserData($response->json());
+            }
+            throw new \Exception('Failed to fetch user info');
         } catch (\Throwable $th) {
-            log::error('Error Message !!');
+            throw new \Exception('LinkedIn API Error: ' . $th->getMessage());
         }
     }
-    public function mapUserData($data){
-        $info=collect(['data'=>$data])->map(function($user){
-                return[
-                    'id'=>$user['sub'],
-                    'first_name'=>$user['given_name'],
-                    'last_name'=>$user['family_name'],
-                    'email'=>$user['email'],
-                    'profile_image'=>$user['picture']
-    
-    
-                ];
-            });
-            return $info;
-    
+
+    public function mapUserDataByScopes($data)
+    {
+        return [
+            'id' => $data->sub,
+            'first_name' => $data->given_name,
+            'last_name' => $data->family_name,
+            'email' => $data->email,
+            'profile_image' => $data->picture
+        ];
     }
 }
