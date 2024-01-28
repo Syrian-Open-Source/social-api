@@ -20,6 +20,7 @@ class SocialApi
         if ($validator->fails()) {
             // Handle the error scenario
             throw new \InvalidArgumentException('Validation failed: ' . $validator->errors());
-        }
+        }      
+     }
     }
-}
+
