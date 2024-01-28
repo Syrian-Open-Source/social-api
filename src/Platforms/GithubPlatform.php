@@ -6,39 +6,33 @@ use Illuminate\Support\Facades\Log;
 
 class GithubPlatform extends AbstractPlatform
 {
+    protected $baseUrl = 'https://api.github.com/user';
+    protected $scopes = [];
 
-    protected $baseurl = 'https://api.github.com/user';
-    protected $scopes;
-
-    public function getUserInfo($token)
+    public function getUserInfo()
     {
         try {
-            $response = Http::withToken($token)
-                ->acceptJson()
-                ->get($this->baseurl);
-
-            $user = json_decode($response->getBody(), true);
-
-            $mappedData = $this->mapUserToObject($user);
-
+            $response = $this->sendRequest($this->baseUrl);
+            if (!$response->successful()) {
+                throw new \Exception('API request failed.');
+            }
+            $user = $response->json();
+            $mappedData = $this->mapUserData($user);
             return response()->json(['Data' => $mappedData]);
-
         } catch (\Exception $e) {
-
             Log::error('Failed To Fetch User Information: ' . $e->getMessage());
-
+            throw $e;
         }
     }
 
-    protected function mapUserData( $user)
+    protected function mapUserDataByScopes($user)
     {
-        return ([
-            'id' => $user['id'],
-            'nodeId' => $user['node_id'],
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'avatar_url' => $user['avatar_url'],
-
-        ]);
+        return [
+            'id' => $user['id'] ?? null,
+            'nodeId' => $user['node_id'] ?? null,
+            'name' => $user['name'] ?? null,
+            'email' => $user['email'] ?? null,
+            'avatar_url' => $user['avatar_url'] ?? null,
+        ];
     }
 }

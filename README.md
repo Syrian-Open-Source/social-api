@@ -2,7 +2,19 @@
 
 # SocialApi
 
+This package offers a simplified solution for login using social media accounts.
+
+We go mainly to the Backend developers so that they can use them when working with API and in close collaboration between them.The frontend send the token then through this package we can bring the information you want.
+
 ## Installation
+
+##### 1 - Dependency
+
+The first step is using composer to install the package and automatically update your composer.json file, you can do this by running:
+
+```shell
+composer require syrian-open-source/laravel-query-helper
+```
 
 ## Changelog
 
@@ -15,7 +27,9 @@ if we do not fix it within a short period of time please open a new issue descri
 
 ## Credits
 
-[somar kesen](https://www.linkedin.com/in/somarkesen/)
+- [Somar kesen](https://www.linkedin.com/in/somarkesen/)
+- [Ali Alshikh](https://github.com/AliAlshikh99)
+- [Homam Haidar](https://github.com/HomamHaidar)
 
 ## About Syrian Open Source
 
