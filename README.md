@@ -13,8 +13,13 @@ We go mainly to the Backend developers so that they can use them when working wi
 The first step is using composer to install the package and automatically update your composer.json file, you can do this by running:
 
 ```shell
-composer require syrian-open-source/laravel-query-helper
+composer require syrian-open-source/SocialApi
 ```
+
+## Usage
+
+1. You can use this package in your laravel project to get user data from (facebook,google,github,linkedin,apple)
+2.
 
 ## Changelog
 
@@ -30,6 +35,7 @@ if we do not fix it within a short period of time please open a new issue descri
 - [Somar kesen](https://www.linkedin.com/in/somarkesen/)
 - [Ali Alshikh](https://github.com/AliAlshikh99)
 - [Homam Haidar](https://github.com/HomamHaidar)
+- [Mary Ali](https://github.com/Marikamal)
 
 ## About Syrian Open Source
 
