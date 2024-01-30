@@ -3,11 +3,11 @@
 namespace SOS\SocialApi\Platforms;
 
 /**
- * arthur by: Ali.
- * github: 
- * linkedin: 
+ * @author by:Ali Alshikh.
+ * github: https://github.com/AliAlshikh99
+ * linkedin:https://www.linkedin.com/in/ali-alshikh99/ 
  */
-class LinkedIn extends AbstractPlatform
+class LinkedIn extends AbstractPlatform 
 {
     protected $scopes = ['openid', 'profile', 'email'];
     protected $baseUrl = 'https://api.linkedin.com/v2/userinfo';
@@ -17,7 +17,7 @@ class LinkedIn extends AbstractPlatform
         try {
             $response = $this->sendRequest($this->baseUrl);
             if ($response->successful()) {
-                return $this->mapUserData($response->json());
+                return $this->mapUserDataByScopes(['profile'],$response->json());
             }
             throw new \Exception('Failed to fetch user info');
         } catch (\Throwable $th) {
@@ -25,14 +25,38 @@ class LinkedIn extends AbstractPlatform
         }
     }
 
-    public function mapUserDataByScopes($data)
+  public function mapUserDataByScopes($scopes,$userData)
     {
-        return [
-            'id' => $data->sub,
-            'first_name' => $data->given_name,
-            'last_name' => $data->family_name,
-            'email' => $data->email,
-            'profile_image' => $data->picture
-        ];
+    
+        $mappedData = [];
+
+        if ($scopes === []) {
+            $mappedData['data'] = $userData->json();
+        } else {
+            $requiredFields = [];
+            foreach ($scopes as $scope) {
+
+                $requiredFields = array_merge($requiredFields, match ($scope)
+                {
+                    'openid' => ['id'],
+                    'email' => ['id', 'email'],
+                    'profile' => ['id', 'first_name', 'last_name', 'email', 'profile_image'],
+                }
+            );
+        }
+
+        $mappedData = array_intersect_key([
+            'id'=> $userData['sub'],
+            'email'=>$userData['email'],
+            'first_name'=>$userData['given_name'],
+            'last_name'=>$userData['family_name'],
+            'profile_image'=>$userData['picture'],
+
+
+        ], array_flip($requiredFields));
     }
+
+       return $mappedData;
+    }
+
 }
