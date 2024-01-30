@@ -4,7 +4,7 @@ namespace SOS\SocialApi\Platforms;
 
 use Illuminate\Support\Facades\Log;
 
-class GithubPlatform extends AbstractPlatform
+class Github extends AbstractPlatform
 {
     protected $baseUrl = 'https://api.github.com/user';
     protected $scopes = [];
