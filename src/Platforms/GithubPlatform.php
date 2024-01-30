@@ -4,35 +4,53 @@ namespace SOS\SocialApi\Platforms;
 
 use Illuminate\Support\Facades\Log;
 
-class Github extends AbstractPlatform
+/**
+ * arthur by: Homam haidar.
+ * github:https://github.com/HomamHaidar
+ * linkedin:https://www.linkedin.com/in/homamhaidar/
+ */
+class GithubPlatform extends AbstractPlatform
 {
     protected $baseUrl = 'https://api.github.com/user';
-    protected $scopes = [];
+    protected $scopes = ['id', 'nodeId', 'nickname', 'name', 'email', 'avatar'];
+
 
     public function getUserInfo()
     {
         try {
             $response = $this->sendRequest($this->baseUrl);
-            if (!$response->successful()) {
-                throw new \Exception('API request failed.');
+            if (isset($response['id'])) {
+                return $this->mapUserDataByScopes($this->scopes,$response);
             }
-            $user = $response->json();
-            $mappedData = $this->mapUserData($user);
-            return response()->json(['Data' => $mappedData]);
+            throw new \Exception('Failed to fetch user info');
+
         } catch (\Exception $e) {
             Log::error('Failed To Fetch User Information: ' . $e->getMessage());
             throw $e;
         }
     }
 
-    protected function mapUserDataByScopes($user)
+    protected function mapUserDataByScopes($scopes,$userData)
     {
-        return [
-            'id' => $user['id'] ?? null,
-            'nodeId' => $user['node_id'] ?? null,
-            'name' => $user['name'] ?? null,
-            'email' => $user['email'] ?? null,
-            'avatar_url' => $user['avatar_url'] ?? null,
-        ];
+        $mappedData = [];
+        $requiredFields = [];
+       
+        foreach ($scopes as $scope) {
+                $requiredFields[] = 'id';
+                if (in_array($scope, $this->scopes)) {
+                    $requiredFields[] = $scope;
+                }
+              
+            }
+    
+        if (empty($requiredFields)) {
+                $requiredFields =$this->scopes ;
+            }
+        
+        foreach ($requiredFields as $field) {
+            $mappedData[$field] = $userData[$field] ?? null;
+        }
+        
+        return $mappedData;
     }
 }
