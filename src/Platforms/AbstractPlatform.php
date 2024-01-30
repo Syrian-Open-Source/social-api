@@ -38,5 +38,5 @@ abstract class AbstractPlatform
   }
 
   abstract protected function getUserInfo();
-  abstract protected function mapUserDataByScopes($scopes = null);
+  abstract protected function mapUserDataByScopes($scopes ,$userData);
 }
