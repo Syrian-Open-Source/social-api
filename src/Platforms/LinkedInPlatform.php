@@ -7,7 +7,7 @@ namespace SOS\SocialApi\Platforms;
  * github: https://github.com/AliAlshikh99
  * linkedin:https://www.linkedin.com/in/ali-alshikh99/ 
  */
-class LinkedIn extends AbstractPlatform 
+class LinkedIn extends AbstractPlatform
 {
     protected $scopes = ['openid', 'profile', 'email'];
     protected $baseUrl = 'https://api.linkedin.com/v2/userinfo';
@@ -15,9 +15,9 @@ class LinkedIn extends AbstractPlatform
     public function getUserInfo()
     {
         try {
-            $response = $this->sendRequest($this->baseUrl);
-            if ($response->successful()) {
-                return $this->mapUserDataByScopes(['profile'],$response->json());
+            $response = $this->sendRequest($this->baseUrl, 'GET');
+            if (isset($response['id'])) {
+                return $this->mapUserDataByScopes($this->scopes, $response);
             }
             throw new \Exception('Failed to fetch user info');
         } catch (\Throwable $th) {
@@ -25,38 +25,30 @@ class LinkedIn extends AbstractPlatform
         }
     }
 
-  public function mapUserDataByScopes($scopes,$userData)
+
+    public function mapUserDataByScopes($scopes, $userData)
     {
-    
         $mappedData = [];
+        $requiredFields = [];
 
-        if ($scopes === []) {
-            $mappedData['data'] = $userData->json();
-        } else {
-            $requiredFields = [];
-            foreach ($scopes as $scope) {
-
-                $requiredFields = array_merge($requiredFields, match ($scope)
-                {
-                    'openid' => ['id'],
-                    'email' => ['id', 'email'],
-                    'profile' => ['id', 'first_name', 'last_name', 'email', 'profile_image'],
-                }
-            );
+        foreach ($scopes as $scope) {
+            switch ($scope) {
+                case 'openid':
+                    $requiredFields = array_merge($requiredFields, ['id']);
+                    break;
+                case 'email':
+                    $requiredFields = array_merge($requiredFields, ['id', 'emailAddress']);
+                    break;
+                case 'profile':
+                    $requiredFields = array_merge($requiredFields, ['id', 'firstName', 'lastName', 'profilePicture']);
+                    break;
+            }
         }
 
-        $mappedData = array_intersect_key([
-            'id'=> $userData['sub'],
-            'email'=>$userData['email'],
-            'first_name'=>$userData['given_name'],
-            'last_name'=>$userData['family_name'],
-            'profile_image'=>$userData['picture'],
+        foreach ($requiredFields as $field) {
+            $mappedData[$field] = $userData[$field] ?? null;
+        }
 
-
-        ], array_flip($requiredFields));
+        return $mappedData;
     }
-
-       return $mappedData;
-    }
-
 }
