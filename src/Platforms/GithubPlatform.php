@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
  * github:https://github.com/HomamHaidar
  * linkedin:https://www.linkedin.com/in/homamhaidar/
  */
-class GithubPlatform extends AbstractPlatform
+class Github  extends AbstractPlatform
 {
     protected $baseUrl = 'https://api.github.com/user';
     protected $scopes = ['id', 'nodeId', 'nickname', 'name', 'email', 'avatar'];
