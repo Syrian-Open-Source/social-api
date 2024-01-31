@@ -7,7 +7,16 @@
     "laravel",
     "syrian open source",
     "Login",
-    "Social Media"
+    "Social Media",
+    "facebook",
+    "instagram",
+    "google",
+    "apple",
+    "package",
+    "somar",
+    "somar kesen",
+    "syria",
+    "syrian"
   ],
   "authors": [
     {
@@ -19,7 +28,8 @@
   ],
   "require": {
     "php": ">=8.0",
-    "illuminate/support": ">=5.0"
+    "illuminate/support": ">=5.0",
+    "syrian-open-source/social-api": "dev-master@dev"
   },
   "autoload": {
     "psr-4": {
@@ -29,7 +39,7 @@
       "src/helpers.php"
     ]
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "extra": {
     "laravel": {
       "providers": [
