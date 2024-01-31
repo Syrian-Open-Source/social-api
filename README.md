@@ -13,7 +13,7 @@ We go mainly to the Backend developers so that they can use them when working wi
 The first step is using composer to install the package and automatically update your composer.json file, you can do this by running:
 
 ```shell
-composer require syrian-open-source/SocialApi
+composer require syrian-open-source/social-api
 ```
 
 ## Usage
