@@ -33,10 +33,7 @@
   "autoload": {
     "psr-4": {
       "SOS\\SocialApi\\": "src/"
-    },
-    "files": [
-      "src/helpers.php"
-    ]
+    }
   },
   "minimum-stability": "stable",
   "prefer-stable": true,
