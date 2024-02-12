@@ -1,50 +1,53 @@
 {
-  "name": "syrian-open-source/social-api",
-  "description": "Login With Social Media Package",
-  "type": "library",
-  "license": "MIT",
-  "keywords": [
-    "laravel",
-    "syrian open source",
-    "Login",
-    "Social Media",
-    "facebook",
-    "instagram",
-    "google",
-    "apple",
-    "package",
-    "somar",
-    "somar kesen",
-    "syria",
-    "syrian"
-  ],
-  "authors": [
-    {
-      "name": "Somar Kesen",
-      "email": "contact@somar-kesen.com",
-      "homepage": "https://github.com/somarkn99",
-      "role": "Developer"
+    "name": "syrian-open-source/social-api",
+    "description": "Login With Social Media Package",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "syrian open source",
+        "Login",
+        "Social Media",
+        "facebook",
+        "instagram",
+        "google",
+        "apple",
+        "package",
+        "somar",
+        "somar kesen",
+        "syria",
+        "syrian"
+    ],
+    "authors": [
+        {
+            "name": "Somar Kesen",
+            "email": "contact@somar-kesen.com",
+            "homepage": "https://github.com/somarkn99",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "illuminate/support": ">=5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SOS\\SocialApi\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SOS\\SocialApi\\Providers\\SocialApiProvider"
+            ],
+            "aliases": {
+                "SocialApi": "SOS\\SocialApi\\Facades\\SocialApiFacade"
+            }
+        }
     }
-  ],
-  "require": {
-    "php": ">=8.0",
-    "illuminate/support": ">=5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "SOS\\SocialApi\\": "src/"
-    }
-  },
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "extra": {
-    "laravel": {
-      "providers": [
-        "SOS\\SocialApi\\Providers\\SocialApiProvider"
-      ],
-      "aliases": {
-        "SocialApi": "SOS\\SocialApi\\Facades\\SocialApiFacade"
-      }
-    }
-  }
 }
