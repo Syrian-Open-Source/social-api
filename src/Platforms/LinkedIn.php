@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Log;
 class LinkedIn extends AbstractPlatform
 {
     // Define the scopes that will be used to request user information. These should align with LinkedIn API permissions.
-    protected $scopes = ['openid', 'profile', 'email'];
+    protected $scopes = ['openid', 'name', 'email', 'picture'];
 
     // Base URL for LinkedIn's API to fetch user information.
     protected $baseUrl = 'https://api.linkedin.com/v2/userinfo';
@@ -34,14 +34,8 @@ class LinkedIn extends AbstractPlatform
     public function getUserInfo()
     {
         try {
-            // Log the base URL for debugging purposes.
-            Log::debug($this->baseUrl);
-
             // Send a GET request to LinkedIn API and store the response.
             $response = $this->sendRequest($this->baseUrl, 'GET');
-
-            // Log the API response for debugging.
-            Log::debug(json_encode($response));
 
             // Check if the expected user identifier 'sub' is present in the response.
             if (isset($response['sub'])) {
@@ -73,20 +67,30 @@ class LinkedIn extends AbstractPlatform
         foreach ($scopes as $scope) {
             switch ($scope) {
                 case 'openid':
-                    $requiredFields = array_merge($requiredFields, ['id']);
+                    // Directly add 'sub' to 'requiredFields' to ensure it's included in the response.
+                    $requiredFields['sub'] = 'id'; // Map 'sub' as 'id' in the mapped data
                     break;
                 case 'email':
-                    $requiredFields = array_merge($requiredFields, ['id', 'emailAddress']);
+                    $requiredFields['email'] = 'email';
                     break;
-                case 'profile':
-                    $requiredFields = array_merge($requiredFields, ['id', 'firstName', 'lastName', 'profilePicture']);
+                case 'name':
+                    $requiredFields['name'] = 'name';
+                    break;
+                case 'picture':
+                    $requiredFields['picture'] = 'picture';
                     break;
             }
         }
 
         // Map each required field from the raw API response to the structured mapped data array.
-        foreach ($requiredFields as $field) {
-            $mappedData[$field] = $userData[$field] ?? null;
+        foreach ($requiredFields as $apiField => $mappedField) {
+            if ($apiField === 'sub') {
+                // If the field is 'sub', map it to 'id' in the final response
+                $mappedData['id'] = $userData[$apiField] ?? null;
+            } else {
+                // For all other fields, map them directly
+                $mappedData[$mappedField] = $userData[$apiField] ?? null;
+            }
         }
 
         return $mappedData;

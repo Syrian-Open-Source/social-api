@@ -71,10 +71,10 @@ class Google extends AbstractPlatform
         // Maps API response fields to more friendly names.
         $fieldMappings = [
             'sub' => 'id',
-            'email' => 'emailAddress',
+            'email' => 'email',
             'given_name' => 'firstName',
             'family_name' => 'lastName',
-            'picture' => 'profilePicture'
+            'picture' => 'picture'
         ];
 
         // Determines which fields to include in the mapped data based on requested scopes.
