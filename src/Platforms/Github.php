@@ -19,6 +19,7 @@ class Github extends AbstractPlatform
     {
         try {
             $response = $this->sendRequest($this->baseUrl);
+
             if (isset($response['id'])) {
                 return $this->mapUserDataByScopes($this->scopes, $response);
             }

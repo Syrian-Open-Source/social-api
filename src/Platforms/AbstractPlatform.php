@@ -18,42 +18,52 @@ use GuzzleHttp\Exception\GuzzleException;
 
 abstract class AbstractPlatform
 {
-  protected $scopes = [];
-  protected $baseUrl;
-  protected $token;
-  protected $httpClient;
+    protected $scopes = [];
+    protected $baseUrl;
+    protected $token;
+    protected $httpClient;
 
-  public function __construct($token = null)
-  {
-    $this->token = $token;
-    $this->httpClient = new Client();
-  }
-
-  public function setToken($token)
-  {
-    $this->token = $token;
-  }
-
-  public function addScope($scope)
-  {
-    if (!in_array($scope, $this->scopes)) {
-      $this->scopes[] = $scope;
+    public function __construct($token = null)
+    {
+        $this->token = $token;
+        $this->httpClient = new Client();
     }
-  }
 
-  protected function sendRequest($endpoint, $method = 'GET', $headers = [], $body = [])
-  {
-    try {
-      $response = $this->httpClient->request($method, $this->baseUrl . $endpoint, [
-        'headers' => array_merge(['Authorization' => 'Bearer ' . $this->token], $headers),
-        'body' => $body
-      ]);
-      return json_decode($response->getBody(), true);
-    } catch (GuzzleException $e) {
-      throw new \Exception("HTTP request failed: " . $e->getMessage());
+    public function setToken($token)
+    {
+        $this->token = $token;
     }
-  }
 
-  abstract protected function getUserInfo();
-  abstract protected function mapUserDataByScopes($scopes, $userData);
+    public function addScope($scope)
+    {
+        if (!in_array($scope, $this->scopes)) {
+            $this->scopes[] = $scope;
+        }
+    }
+
+    protected function sendRequest($endpoint, $method = 'GET', $headers = [], $body = [])
+    {
+        $options = [
+            'headers' => array_merge(['Authorization' => 'Bearer ' . $this->token], $headers),
+        ];
+
+        // Determine how to send the body based on the method
+        if (!empty($body)) {
+            if ($method === 'GET') {
+                $options['query'] = $body; // Attach parameters as query string for GET requests
+            } else {
+                $options['form_params'] = $body; // Use form_params for POST/PUT/PATCH etc. to send data as application/x-www-form-urlencoded
+            }
+        }
+
+        try {
+            $response = $this->httpClient->request($method, $endpoint, $options);
+            return json_decode($response->getBody(), true);
+        } catch (GuzzleException $e) {
+            throw new \Exception("HTTP request failed: " . $e->getMessage());
+        }
+    }
+
+    abstract protected function getUserInfo();
+    abstract protected function mapUserDataByScopes($scopes, $userData);
 }
