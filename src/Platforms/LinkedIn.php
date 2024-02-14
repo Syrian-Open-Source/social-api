@@ -59,40 +59,33 @@ class LinkedIn extends AbstractPlatform
      * @return array The mapped user data including only the fields specified by the requested scopes.
      */
     public function mapUserDataByScopes($scopes, $userData)
-    {
-        $mappedData = [];
-        $requiredFields = [];
+{
+    // Initialize an empty array to store the mapped data
+    $mappedData = [];
 
-        // Determine the required fields based on the requested scopes.
-        foreach ($scopes as $scope) {
-            switch ($scope) {
-                case 'openid':
-                    // Directly add 'sub' to 'requiredFields' to ensure it's included in the response.
-                    $requiredFields['sub'] = 'id'; // Map 'sub' as 'id' in the mapped data
-                    break;
-                case 'email':
-                    $requiredFields['email'] = 'email';
-                    break;
-                case 'name':
-                    $requiredFields['name'] = 'name';
-                    break;
-                case 'picture':
-                    $requiredFields['picture'] = 'picture';
-                    break;
-            }
-        }
+    // Initialize an empty array to store the required fields
+    $requiredFields = [];
 
-        // Map each required field from the raw API response to the structured mapped data array.
-        foreach ($requiredFields as $apiField => $mappedField) {
-            if ($apiField === 'sub') {
-                // If the field is 'sub', map it to 'id' in the final response
-                $mappedData['id'] = $userData[$apiField] ?? null;
-            } else {
-                // For all other fields, map them directly
-                $mappedData[$mappedField] = $userData[$apiField] ?? null;
-            }
-        }
-
-        return $mappedData;
+    // Loop through each scope
+    foreach ($scopes as $scope) {
+        // Use a match expression to determine the required fields based on the scope
+        // and merge them into the $requiredFields array
+        $requiredFields = array_merge($requiredFields, match ($scope) {
+            'openid' => ['sub' => 'id'],
+            'email' => ['email' => 'email'],
+            'name' => ['name' => 'name'],
+            'picture' => ['picture' => 'picture'],
+        });
     }
+
+    // Loop through each required field
+    foreach ($requiredFields as $apiField => $field) {
+        // Map the corresponding value from $userData to $mappedData,
+        // or set it to null if it doesn't exist in $userData
+        $mappedData[$field] = $userData[$apiField] ?? null;
+    }
+
+    // Return the mapped data
+    return $mappedData;
+}
 }
