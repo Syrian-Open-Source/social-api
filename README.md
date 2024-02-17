@@ -19,7 +19,21 @@ composer require syrian-open-source/social-api
 ## Usage
 
 1. You can use this package in your laravel project to get user data from (facebook,google,github,linkedin,apple)
-2.
+2. In your Controller use this code:
+
+```shell
+use Illuminate\Http\Request;
+use SOS\SocialApi\Facades\SocialApiFacade as SocialApi;
+
+class TestController extends Controller
+{
+    public function ExampleController(Request $request)
+        {
+            return SocialApi::login($request->platform, $request->platform_token);
+        }
+}
+
+```
 
 ## Changelog
 
@@ -36,6 +50,7 @@ if we do not fix it within a short period of time please open a new issue descri
 - [Ali Alshikh](https://github.com/AliAlshikh99)
 - [Homam Haidar](https://github.com/HomamHaidar)
 - [Mary Ali](https://github.com/Marikamal)
+- [Mustafa Fares](https://github.com/MustafaFares445)
 
 ## About Syrian Open Source
 
